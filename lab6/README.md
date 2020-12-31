@@ -2,8 +2,8 @@
 
 ### Условие
 
-![condition]()
+![condition](condition.jpg)
 
 ### решение задания
 
-![solution]()
+![solution](solution.jpg)
