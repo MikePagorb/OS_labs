@@ -10,7 +10,7 @@ Although a conforming standard library implementation is allowed to assume that 
 
 As stated, the allocator maintains blocks of free pages where each block is a power of two number of pages. The exponent for the power of two sized block is referred to as the order. An array of free_area_t structs are maintained for each order that points to a linked list of blocks of pages that are free as indicated by Figure:
 
-![sheme1](https://github.com/Mykhailo1257Kholmohorov/OS_labs/tree/main/lab2/sheme1.jpg)
+![sheme1](sheme1.jpg)
 
 Hence, the 0th element of the array will point to a list of free page blocks of size 2^0 or 1 page, the 1st element will be a list of 2^1 (2) pages up to 2^(MAX_ORDER−1) number of pages, where the MAX_ORDER is currently defined as 10. This eliminates the chance that a larger block will be split to satisfy a request where a smaller block would have sufficed. The page blocks are maintained on a linear linked list via page→list.
 
@@ -22,20 +22,21 @@ Linux provides a quite sizable API for the allocation of page frames. All of the
 
 The allocation API functions all use the core function \_\_alloc_pages() but the APIs exist so that the correct node and zone will be chosen. Different users will require different zones such as ZONE_DMA for certain device drivers or ZONE_NORMAL for disk buffers and callers should not have to be aware of what node is being used. A full list of page allocation APIs are listed in Table:
 
-![sheme2](https://github.com/Mykhailo1257Kholmohorov/OS_labs/tree/main/lab2/sheme2.jpg)
+![sheme2](sheme2.jpg)
 
 Allocations are always for a specified order, 0 in the case where a single page is required. If a free block cannot be found of the requested order, a higher order block is split into two buddies. One is allocated and the other is placed on the free list for the lower order. Next figure shows where a 2^4 block is split and how the buddies are added to the free lists until a block for the process is available.
 
-![sheme3](https://github.com/Mykhailo1257Kholmohorov/OS_labs/tree/main/lab2/sheme3.jpg)
+![sheme3](sheme3.jpg)
 
 ### Free pages
 
 For the freeing of pages is a lot simpler and exists to help remember the order of the block to free as one disadvantage of a buddy allocator is that the caller has to remember the size of the original allocation. The API for freeing is listed in Table
 
-![sheme4](https://github.com/Mykhailo1257Kholmohorov/OS_labs/tree/main/lab2/sheme4.jpg)
+![sheme4](sheme4.jpg)
 
 ### GFP flags
 
 A persistent concept through the whole VM is the Get Free Page (GFP) flags. These flags determine how the allocator and kswapd will behave for the allocation and freeing of pages. For example, an interrupt handler may not sleep so it will not have the \_\_GFP_WAIT flag set as this flag indicates the caller may sleep.
 The first of the three is the set of zone modifiers listed in Table. These flags indicate that the caller must try to allocate from a particular zone. The reader will note there is not a zone modifier for ZONE_NORMAL. This is because the zone modifier flag is used as an offset within an array and 0 implicitly means allocate from ZONE_NORMAL.
-![sheme5](https://github.com/Mykhailo1257Kholmohorov/OS_labs/tree/main/lab2/sheme5.jpg)
+
+![sheme5](sheme5.jpg)
